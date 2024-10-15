@@ -1,4 +1,4 @@
-library( testhat)
+library(testhat)
 
 context("knapsack_dynamic")
 
