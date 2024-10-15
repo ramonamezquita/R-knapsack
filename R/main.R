@@ -13,7 +13,7 @@ create_knapsack_objects <- function(n = 2000) {
 
 }
 
-
+knapsack_objects<- create_knapsack_objects
 #' Brute-force Knapsack Problem Solver
 #'
 #' This function solves the knapsack problem using a brute-force approach.
@@ -213,7 +213,7 @@ W = 200000
 
 brute_force_knapsack(x = knapsack_objects, W = W)
 
-gpt_knapsack_dynamic(x = knapsack_objects, W = W)
+#gpt_knapsack_dynamic(x = knapsack_objects, W = W)
 knapsack_dynamic(x = knapsack_objects, W = W)
 
 
