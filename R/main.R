@@ -10,7 +10,6 @@ create_knapsack_objects <- function(n = 2000) {
     )
 
   return(knapsack_objects)
-
 }
 
 knapsack_objects<- create_knapsack_objects
@@ -80,8 +79,7 @@ brute_force_knapsack <- function(x, W) {
 
 
 
-
-#' Dynamic Programming Knapsack Solver
+#' 0-1 Knapsack Problem Solver (Dynamic optimal)
 #'
 #' This function solves the knapsack problem using a dynamic programming approach.
 #' It finds the optimal subset of items that maximizes the total value without exceeding
@@ -153,39 +151,85 @@ knapsack_dynamic <- function(x, W) {
 }
 
 
+
+#' 0-1 Knapsack Problem Solver (Dynamic sub-optimal)
+#'
+#' @param x A data frame with two columns: \code{w} (weights) and \code{v} (values) of the items.
+#' @param W The total capacity of the knapsack.
+#'
+#' @return The maximum total value that can be obtained.
+#'
+#' @details
+#' This is not the most optimal dynamic programming version of the knapsack problem.
+#' In an optimal solution, once we have selected a fixed number of items, there
+#' is no need to recompute for all possible weights, as the number of items and
+#' the chosen items are already fixed.
+#' A more efficient dynamic programming approach would eliminate unnecessary
+#' computations, focusing only on the possible states directly relevant to the
+#' final solution.
+#'
+#' @references
+#' https://en.wikipedia.org/wiki/Knapsack_problem#0.2F1_knapsack_problem
+suboptimal_knapsack_dynamic <- function(x, W) {
+
+  N <- nrow(x)
+
+  # Results table.
+  m <- matrix(-1, nrow = N + 1, ncol = W + 1)
+
+  # Base case or Boundary conditions.
+  m[, 1] <- 0
+  m[1, ] <- 0
+
+  for (k in 2:(N + 1)) {
+
+    # Weight and value for stage/item k
+    w_k = x$w[k - 1]
+    v_k = x$v[k - 1]
+
+    for (i in 2:(W + 1)) {
+
+      if (w_k > i) {
+        m[k, i] <- m[k - 1, i]
+      } else {
+        m[k, i] <- max(m[k - 1, i], m[k - 1, i - w_k] + v_k)
+      }
+    }
+  }
+  return(m)
+}
+
+
 #'  Greedy heuristic algorithm Knapsack Solver
 #'
-#' @param x 
-#' @param W 
+#' @param x
+#' @param W
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' 
-
-
 greedy_knapsack <- function(x, W) {
-  
+
   # Check input
   stopifnot(is.data.frame(x), all(x$v >= 0, na.rm = TRUE), all(x$w >= 0, na.rm = TRUE), ncol(x) >= 2)
-  
+
   # Create a new column with the value-to-weight ratio
   x$ratio <- x$v / x$w
-  
+
   # Add a column of the original indices
   x$index <- 1:nrow(x)
-  
+
   # Sort items by ratio in decreasing order
   x <- x[order(x$ratio, decreasing = T), ]
-  
+
   # Initialize value and weight
   value <- 0
   weight <- 0
   elements <- c()
-  
+
   for (i in 1:nrow(x)) {
-    
+
     # Check if adding the item would exceed the capacity
     if (weight + x$w[i] <= W) {
       value <- value + x$v[i]   # update value
@@ -195,29 +239,46 @@ greedy_knapsack <- function(x, W) {
       break  # Stop if the next item cannot be added
     }
   }
-  
+
   # Return the total value and the selected elements
   return(list(value = round(value), elements = elements))
 }
 
 
 
+optimal_knapsack_dynamic <- function(x, W) {
 
-greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
+  N <- nrow(x)
 
+  # Define value[n, W]
+  value <- matrix(-1, nrow = N, ncol = W)
 
-knapsack_objects <- create_knapsack_objects()[1:500,]
-#knapsack_objects <- data.frame(w = c(3, 8, 5), v = c(4, 6, 5))
-W = 200000
+  m <- function(i, j) {
 
-brute_force_knapsack(x = knapsack_objects, W = W)
+    # Return if already computed
+    if (value[i, j] != -1) return(value[i, j])
 
-#gpt_knapsack_dynamic(x = knapsack_objects, W = W)
-knapsack_dynamic(x = knapsack_objects, W = W)
+    # Base case or Boundary condition.
+    # m[0, j] = 0 : The max value of a knapsack with no items is 0.
+    # m[i, 0] = 0 : The max value of a knapsack with no capacity is 0.
+    if (i == 0 || j <= 0) {
+      value[i, j] <<- 0
+    }
 
+    # Weight and value for i-th item.
+    w_i <- x$w[i]
+    v_i <- x$v[i]
 
+    # Case 1: Item cannot fit in the bag
+    if (w_i > j) {
+      value[i - 1, j] <<- m(i - 1, j)
+      value[i, j] <<- value[i - 1, j]
 
+      # Case 2: Item can fit in the bag
+    } else {
 
-
+      m_ij <- max(m(i - 1, j), m(i - 1, j - w_i) + v_i)
+    }
+  }
+}
 
