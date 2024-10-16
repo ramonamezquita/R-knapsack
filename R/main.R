@@ -245,6 +245,25 @@ greedy_knapsack <- function(x, W) {
 }
 
 
+# Question: How much time does it takes to run the algorithm for n = 1000000 objects?
+
+# Generating 1000000 objects
+n <- 1000000
+suppressWarnings({
+  set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+})
+knapsack_objects_large <- data.frame(
+  w = sample(1:4000, size = n, replace = TRUE),
+  v = runif(n = n, 0, 10000)
+)
+
+# Measure the time to run the algorithm
+system.time({
+  result <- greedy_knapsack(knapsack_objects_large, W = 500000)
+})
+
+
+
 
 optimal_knapsack_dynamic <- function(x, W) {
 
