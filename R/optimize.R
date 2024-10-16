@@ -5,7 +5,7 @@ profvis({
 })
 
 profvis({
-  greedy_knapsack(x = knapsack_objects[1:100, ], W = 3500)
+  greedy_knapsack(x = knapsack_objects[1:1000, ], W = 90000)
 })
 
 profvis({
