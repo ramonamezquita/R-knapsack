@@ -1,3 +1,6 @@
+library(testthat)
+library(heleramcar6)
+test_check("heleramcar6")
 
 context("greedy_knapsack")
 

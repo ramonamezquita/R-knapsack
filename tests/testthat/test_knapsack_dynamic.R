@@ -1,4 +1,7 @@
-library(testhat)
+
+library(testthat)
+library(heleramcar6)
+test_check("heleramcar6")
 
 context("knapsack_dynamic")
 
