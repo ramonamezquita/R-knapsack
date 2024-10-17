@@ -1,12 +1,21 @@
 #' Greedy heuristic algorithm Knapsack Solver
 #'
-#' @param x
-#' @param W
+#' @param x A data frame with two columns: \code{w} (weights) and \code{v} (values) of the items.
+#' @param W The total capacity of the knapsack.
 #'
-#' @return
-#' @export
+#' @return A list containing:
+#' \item{value}{The total value of the selected items, rounded to the nearest integer.}
+#' \item{elements}{A vector of the original indices of the selected items.}
+#' @details
+#' The algorithm follows a greedy heuristic, which sorts the items
+#' by their value-to-weight ratio in descending order and adds them to the
+#' knapsack if their inclusion does not exceed the weight capacity.
+#' This approach does not guarantee an optimal solution but is efficient.
 #'
-#' @examples
+#' @references
+#' https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm
+#'
+#' #' @export
 greedy_knapsack <- function(x, W) {
 
   # Check input
