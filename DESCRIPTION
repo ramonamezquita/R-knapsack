@@ -1,15 +1,16 @@
 Package: heleramcar6
 Type: Package
-Title: What the Package Does (Title Case)
+Title: 0-1 Knapsack Solvers
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person("Helena", "Llorens", email = "hllor282@student.liu.se", role = c("aut", "cre")),
+    person("Carmen", "Rodríguez", email = "carro162@student.liu.se", role = "aut"),
+    person("Ramón", "Amézquita", email = "ramam120@student.liu.se", role = "aut"))
+Description: Implementation of different 0-1 Knapsack Solvers (brute force, dynamic and greedy).
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+License: MIT + file LICENSE

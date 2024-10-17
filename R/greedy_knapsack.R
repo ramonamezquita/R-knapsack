@@ -15,7 +15,7 @@
 #' @references
 #' https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm
 #'
-#' #' @export
+#' @export
 greedy_knapsack <- function(x, W) {
 
   # Check input
