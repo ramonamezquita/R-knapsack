@@ -19,6 +19,14 @@
 greedy_knapsack <- function(x, W) {
 
   # Check input
+  if (!is.data.frame(x) || ncol(x) < 2) {
+    stop("Input x must be a data frame with at least two columns.")
+  }
+  
+  # Check for non-negative weight capacity
+  if (!is.numeric(W) || W < 0) {
+    stop("Weight capacity W must be a non-negative value.")
+  }
   stopifnot(is.data.frame(x), all(x$v >= 0, na.rm = TRUE), all(x$w >= 0, na.rm = TRUE), ncol(x) >= 2)
 
   # Create a new column with the value-to-weight ratio
