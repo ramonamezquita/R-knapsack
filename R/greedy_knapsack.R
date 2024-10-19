@@ -50,3 +50,4 @@ greedy_knapsack <- function(x, W) {
   # Return the total value and the selected elements
   return(list(value = round(value), elements = elements))
 }
+

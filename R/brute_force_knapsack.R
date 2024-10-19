@@ -27,6 +27,12 @@
 #'
 #' @export
 brute_force_knapsack <- function(x, W) {
+  if (!is.data.frame(x) || ncol(x) < 2) {
+    stop("Input x must be a data frame with at least two columns.")
+  }
+  if (W < 0) {
+    stop("Weight capacity W must be a non-negative value.")
+  }
 
   # Number of items
   n <- nrow(x)
@@ -69,6 +75,10 @@ brute_force_knapsack <- function(x, W) {
 library(parallel)
 
 brute_force_knapsack <- function(x, W, parallel = FALSE) {
+
+  if (W < 0) {
+    stop("Weight capacity W must be a non-negative value.")
+  }
   
   # Number of items
   n <- nrow(x)
@@ -147,3 +157,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
 }
 
 
+test_that("functions rejects erroneous input", {
+  expect_error(brute_force_knapsack(x = knapsack_objects[1:8, ], W = -3500), 
+               "Weight capacity W must be a non-negative value.")
+})
