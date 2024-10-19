@@ -22,8 +22,6 @@ greedy_knapsack <- function(x, W) {
   if (!is.data.frame(x) || ncol(x) < 2) {
     stop("Input x must be a data frame with at least two columns.")
   }
-  
-  # Check for non-negative weight capacity
   if (!is.numeric(W) || W < 0) {
     stop("Weight capacity W must be a non-negative value.")
   }
