@@ -21,7 +21,7 @@
 #'
 #' # Generate a data frame of 100 objects
 #' knapsack_objects_100 <- create_knapsack_objects(n = 100)
-#' 
+#'
 #' @export
 create_knapsack_objects <- function(n = 2000) {
 

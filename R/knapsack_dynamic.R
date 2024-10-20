@@ -88,7 +88,7 @@ suboptimal_knapsack_dynamic <- function(x, W) {
 #' https://en.wikipedia.org/wiki/Knapsack_problem#0.2F1_knapsack_problem
 #'
 #' @export
-knapsack_dynamic <- function(x, W) {
+  knapsack_dynamic <- function(x, W) {
 
   N <- nrow(x)
 
@@ -119,7 +119,7 @@ knapsack_dynamic <- function(x, W) {
       value[i - 1, j] <<- m_ij
       value[i, j] <<- m_ij
 
-      # Case 2: Item can fit in the bag
+    # Case 2: Item can fit in the bag
     } else {
       m_ij <- max(m(i - 1, j), m(i - 1, j - w_i) + v_i)
       value[i, j] <<- m_ij

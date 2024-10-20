@@ -1,3 +1,5 @@
+library(parallel)
+
 #' Brute-force Knapsack Problem Solver
 #'
 #' This function solves the knapsack problem using a brute-force approach.
@@ -26,7 +28,7 @@
 #' brute_force_knapsack(items, W)
 #'
 #' @export
-brute_force_knapsack <- function(x, W) {
+brute_force_knapsack <- function(x, W, parallel = FALSE) {
   if (!is.data.frame(x) || ncol(x) < 2) {
     stop("Input x must be a data frame with at least two columns.")
   }
@@ -37,67 +39,19 @@ brute_force_knapsack <- function(x, W) {
   # Number of items
   n <- nrow(x)
 
-  # Initialize solution variables
-  value <- 0
-  elements <- vector()
-
-  # Iterate over all possible combinations (2^n - 1 subsets)
-  for (i in 1:(2^n - 1)) {
-
-
-    mask <- as.logical(intToBits(i)[1:n])
-    x_true <- x[mask, ]
-
-    x_true_weight <- sum(x_true$w)
-    x_true_value <- round(sum(x_true$v))
-
-    # Check if this subset is a valid and better solution
-    if (x_true_weight <= W & x_true_value > value) {
-      value <- x_true_value
-      elements <- which(mask) # Store the indices of the selected items
-    }
-  }
-
-  return(list(value = value, elements = elements))
-}
-
-
-# QUESTION: How much time does it takes to run the algorithm for n = 16 objects?
-
-# ANSWER: Using the function `system.time` (which returns the difference between two proc.time calls,
-# one before executing the given expression and the other one after), we get
-
-# system.time(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
-
-
-# code with parallelization
-
-library(parallel)
-
-brute_force_knapsack <- function(x, W, parallel = FALSE) {
-
-  if (W < 0) {
-    stop("Weight capacity W must be a non-negative value.")
-  }
-  
-  # Number of items
-  n <- nrow(x)
-  
   if (parallel == FALSE) {
-    
     # Initialize solution variables
     value <- 0
     elements <- vector()
-    
+
     # Iterate over all possible combinations (2^n - 1 subsets)
     for (i in 1:(2^n - 1)) {
-      
       mask <- as.logical(intToBits(i)[1:n])
       x_true <- x[mask, ]
-      
+
       x_true_weight <- sum(x_true$w)
       x_true_value <- round(sum(x_true$v))
-      
+
       # Check if this subset is a valid and better solution
       if (x_true_weight <= W & x_true_value > value) {
         value <- x_true_value
@@ -105,39 +59,37 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
       }
     }
     return(list(value = value, elements = elements))
-    
   } else {
-    
     # Parallel implementation
     x$id <- 1:n
-    
+
     # Detect number of available cores
     allcores <- detectCores()
-    
+
     # Create a cluster with the detected number of cores
     cluster <- makeCluster(allcores)
-    
+
     # Export the required variables to the cluster
     clusterExport(cluster, varlist = c("x", "W", "n"), envir = environment())
-    
+
     # Generate all possible combinations in parallel
     all_combinations <- parLapply(cluster, 1:n, function(i) {
       combn(1:n, i, simplify = FALSE)
     })
-    
+
     # Flatten the list of combinations
     all_combinations <- unlist(all_combinations, recursive = FALSE)
-    
+
     # Compute weights and values for each combination in parallel
     all_results <- parLapply(cluster, all_combinations, function(combo) {
       combo_weight <- sum(x$w[combo])
       combo_value <- sum(x$v[combo])
       list(weight = combo_weight, value = combo_value, elements = combo)
     })
-    
+
     # Filter valid combinations that do not exceed the weight limit
     valid_results <- Filter(function(res) res$weight <= W, all_results)
-    
+
     # Find the combination with the maximum value
     if (length(valid_results) > 0) {
       best_result <- valid_results[[which.max(sapply(valid_results, function(res) res$value))]]
@@ -147,10 +99,10 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
       best_value <- 0
       best_elements <- integer(0)
     }
-    
+
     # Stop the cluster
     stopCluster(cluster)
-    
+
     # Return the best value and corresponding elements
     return(list(value = round(best_value), elements = best_elements))
   }
@@ -158,6 +110,8 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
 
 
 test_that("functions rejects erroneous input", {
-  expect_error(brute_force_knapsack(x = knapsack_objects[1:8, ], W = -3500), 
-               "Weight capacity W must be a non-negative value.")
+  expect_error(
+    brute_force_knapsack(x = knapsack_objects[1:8, ], W = -3500),
+    "Weight capacity W must be a non-negative value."
+  )
 })
