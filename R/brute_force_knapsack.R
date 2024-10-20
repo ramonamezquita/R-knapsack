@@ -11,6 +11,7 @@ library(parallel)
 #'   - `v`: Values of the items.
 #' @param W A numeric value representing the maximum weight capacity of the knapsack.
 #' @param parallel If True, runs in parallel using the available cores.
+#' @param numcores Number of cores if `parallel = TRUE`
 #'
 #' @return A list with two elements:
 #'   - `value`: The maximum value achievable without exceeding the weight limit.
@@ -31,7 +32,7 @@ library(parallel)
 #' @import parallel
 #'
 #' @export
-brute_force_knapsack <- function(x, W, parallel = FALSE) {
+brute_force_knapsack <- function(x, W, parallel = FALSE, numcores = 2) {
   if (!is.data.frame(x) || ncol(x) < 2) {
     stop("Input x must be a data frame with at least two columns.")
   }
@@ -56,7 +57,7 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
       x_true_value <- round(sum(x_true$v))
 
       # Check if this subset is a valid and better solution
-      if (x_true_weight <= W & x_true_value > value) {
+      if (x_true_weight <= W && x_true_value > value) {
         value <- x_true_value
         elements <- which(mask) # Store the indices of the selected items
       }
@@ -66,11 +67,8 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
     # Parallel implementation
     x$id <- 1:n
 
-    # Detect number of available cores
-    allcores <- detectCores()
-
     # Create a cluster with the detected number of cores
-    cluster <- makeCluster(allcores)
+    cluster <- makeCluster(numcores)
 
     # Export the required variables to the cluster
     clusterExport(cluster, varlist = c("x", "W", "n"), envir = environment())

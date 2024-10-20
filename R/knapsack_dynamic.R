@@ -1,10 +1,3 @@
-# QUESTION: How much time does it takes to run the algorithm for n = 16 objects?
-
-# ANSWER: Using the function `system.time` (which returns the difference between two proc.time calls,
-# one before executing the given expression and the other one after), we get
-
-# system.time(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
-
 #' 0-1 Knapsack Problem Solver (Dynamic sub-optimal)
 #'
 #' @param x A data frame with two columns: \code{w} (weights) and \code{v} (values) of the items.

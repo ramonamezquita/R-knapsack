@@ -4,7 +4,7 @@
 \alias{brute_force_knapsack}
 \title{Brute-force Knapsack Problem Solver}
 \usage{
-brute_force_knapsack(x, W, parallel = FALSE)
+brute_force_knapsack(x, W, parallel = FALSE, numcores = 2)
 }
 \arguments{
 \item{x}{A data frame with two columns:
@@ -14,6 +14,8 @@ brute_force_knapsack(x, W, parallel = FALSE)
 \item{W}{A numeric value representing the maximum weight capacity of the knapsack.}
 
 \item{parallel}{If True, runs in parallel using the available cores.}
+
+\item{numcores}{Number of cores if `parallel = TRUE`}
 }
 \value{
 A list with two elements:
