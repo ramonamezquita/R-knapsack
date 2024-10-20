@@ -3,5 +3,6 @@
 export(brute_force_knapsack)
 export(create_knapsack_objects)
 export(greedy_knapsack)
-export(optimal_knapsack_dynamic)
+export(knapsack_dynamic)
 export(suboptimal_knapsack_dynamic)
+import(parallel)

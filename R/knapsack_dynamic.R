@@ -23,10 +23,9 @@
 #'
 #' @references
 #' https://en.wikipedia.org/wiki/Knapsack_problem#0.2F1_knapsack_problem
-#' 
+#'
 #' @export
 suboptimal_knapsack_dynamic <- function(x, W) {
-
   N <- nrow(x)
 
   # Results table.
@@ -37,13 +36,11 @@ suboptimal_knapsack_dynamic <- function(x, W) {
   m[1, ] <- 0
 
   for (k in 2:(N + 1)) {
-
     # Weight and value for stage/item k
-    w_k = x$w[k - 1]
-    v_k = x$v[k - 1]
+    w_k <- x$w[k - 1]
+    v_k <- x$v[k - 1]
 
     for (i in 2:(W + 1)) {
-
       if (w_k > i) {
         m[k, i] <- m[k - 1, i]
       } else {
@@ -82,21 +79,19 @@ suboptimal_knapsack_dynamic <- function(x, W) {
 #' # Example usage:
 #' items <- data.frame(w = c(3, 8, 5), v = c(4, 6, 5))
 #' W <- 8
-#' knapsack_dynamic(items, W)  # 9
-#' 
+#' knapsack_dynamic(items, W) # 9
+#'
 #' @references
 #' https://en.wikipedia.org/wiki/Knapsack_problem#0.2F1_knapsack_problem
 #'
 #' @export
-  knapsack_dynamic <- function(x, W) {
-
+knapsack_dynamic <- function(x, W) {
   N <- nrow(x)
 
   # Define value[n, W]
   value <- matrix(-1, nrow = N, ncol = W)
 
   m <- function(i, j) {
-
     # Base case or Boundary condition.
     # m[0, j] = 0 : The max value of a knapsack with no items is 0.
     # m[i, 0] = 0 : The max value of a knapsack with no capacity is 0.
@@ -107,7 +102,9 @@ suboptimal_knapsack_dynamic <- function(x, W) {
     }
 
     # Return if already computed
-    if (value[i, j] != -1) return(value[i, j])
+    if (value[i, j] != -1) {
+      return(value[i, j])
+    }
 
     # Weight and value for i-th item.
     w_i <- x$w[i]
@@ -119,7 +116,7 @@ suboptimal_knapsack_dynamic <- function(x, W) {
       value[i - 1, j] <<- m_ij
       value[i, j] <<- m_ij
 
-    # Case 2: Item can fit in the bag
+      # Case 2: Item can fit in the bag
     } else {
       m_ij <- max(m(i - 1, j), m(i - 1, j - w_i) + v_i)
       value[i, j] <<- m_ij
@@ -130,6 +127,4 @@ suboptimal_knapsack_dynamic <- function(x, W) {
 
   # Compute the maximum possible attained value for the first N items subject to W
   return(round(m(N, W)))
-
 }
-

@@ -10,6 +10,7 @@ library(parallel)
 #'   - `w`: Weights of the items.
 #'   - `v`: Values of the items.
 #' @param W A numeric value representing the maximum weight capacity of the knapsack.
+#' @param parallel If True, runs in parallel using the available cores.
 #'
 #' @return A list with two elements:
 #'   - `value`: The maximum value achievable without exceeding the weight limit.
@@ -26,6 +27,8 @@ library(parallel)
 #' items <- data.frame(w = c(2, 3, 4, 5), v = c(3, 4, 5, 6))
 #' W <- 5
 #' brute_force_knapsack(items, W)
+#'
+#' @import parallel
 #'
 #' @export
 brute_force_knapsack <- function(x, W, parallel = FALSE) {
@@ -107,11 +110,3 @@ brute_force_knapsack <- function(x, W, parallel = FALSE) {
     return(list(value = round(best_value), elements = best_elements))
   }
 }
-
-
-test_that("functions rejects erroneous input", {
-  expect_error(
-    brute_force_knapsack(x = knapsack_objects[1:8, ], W = -3500),
-    "Weight capacity W must be a non-negative value."
-  )
-})
