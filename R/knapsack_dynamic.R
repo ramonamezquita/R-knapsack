@@ -84,6 +84,15 @@ knapsack_dynamic <- function(x, W) {
   # Define value[n, W]
   value <- matrix(-1, nrow = N, ncol = W)
 
+
+  #' Recursive relation for knapsack dynamic defined as
+  #'
+  #'                m(i - 1, j), if j > W
+  #'    m(i, j) =
+  #'                max{m(i - 1, j), m(i - 1, j - w_i) + v_i}, otherwise
+  #'
+  #' @param i int. ith item
+  #' @param j int. Remaining capacity
   m <- function(i, j) {
     # Base case or Boundary condition.
     # m[0, j] = 0 : The max value of a knapsack with no items is 0.
@@ -118,6 +127,24 @@ knapsack_dynamic <- function(x, W) {
     return(value[i, j])
   }
 
-  # Compute the maximum possible attained value for the first N items subject to W
-  return(round(m(N, W)))
+
+  #' Returns the indices of the items of the optimal knapsack.
+  knapsack <- function(i, j) {
+
+    # Weight and value for i-th item.
+    w_i <- x$w[i]
+    v_i <- x$v[i]
+
+    if (i == 0) return(c())
+
+    if (m(i, j) > m(i - 1, j)) {
+      return(c(i, knapsack(i - 1, j - w_i)))
+    } else {
+      return(knapsack(i - 1, j))
+    }
+  }
+
+
+  # Compute the maximum possible value for the first N items subject to W
+  return(list(value=round(m(N, W)), elements=knapsack(N, W)))
 }
