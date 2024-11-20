@@ -13,7 +13,7 @@ You can install the package locally from source:
 
 ```r
 # Download the package and install
-devtools::install_github("ramonamezquita/heleramcar6")
+devtools::install_github("ramonamezquita/R-knapsack")
 ```
 
 ## Functions Overview
